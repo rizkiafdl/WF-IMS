@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% block title %}Buat Goods Receipt — WF-IMS{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1 class="page-title">Goods Receipt</h1>
+  <a href="{{ url_for('procurement.po_detail', po_id=po.id) }}" class="btn btn-secondary">Kembali</a>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <p class="card-title">Info PO</p>
+  </div>
+  <div class="grid-2 mb-0">
+    <div>
+      <p class="text-sm text-muted mb-0">No. PO</p>
+      <p class="fw-medium">{{ po.po_number }}</p>
+    </div>
+    <div>
+      <p class="text-sm text-muted mb-0">Vendor</p>
+      <p class="fw-medium">{{ po.vendor.name }}</p>
+    </div>
+    <div>
+      <p class="text-sm text-muted mb-0">Material</p>
+      <p class="fw-medium">{{ po.material.name }}</p>
+    </div>
+    <div>
+      <p class="text-sm text-muted mb-0">Qty Dipesan</p>
+      <p class="fw-medium">{{ po.qty_ordered }} {{ po.material.unit }}</p>
+    </div>
+  </div>
+</div>
+
+<div class="card mt-6">
+  <form method="POST">
+    <p class="card-title">Input Timbang</p>
+    <p class="text-sm text-muted mt-4">Net Weight = Gross - Tara. Variance dihitung otomatis. Toleransi ±5%.</p>
+    <div class="grid-2 mt-4">
+      <div class="form-group">
+        <label class="form-label" for="gross_weight">Berat Bruto (kg) *</label>
+        <input class="form-input" type="number" id="gross_weight" name="gross_weight"
+               step="0.001" min="0" required>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="tare_weight">Berat Tara / Kendaraan (kg) *</label>
+        <input class="form-input" type="number" id="tare_weight" name="tare_weight"
+               step="0.001" min="0" required>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="putaway_location">Lokasi Putaway</label>
+        <input class="form-input" type="text" id="putaway_location" name="putaway_location"
+               value="RM-WAREHOUSE">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label" for="notes">Catatan</label>
+      <textarea class="form-textarea" id="notes" name="notes" rows="2"></textarea>
+    </div>
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary">Simpan GR & Generate Lot ID</button>
+      <a href="{{ url_for('procurement.po_detail', po_id=po.id) }}" class="btn btn-secondary">Batal</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

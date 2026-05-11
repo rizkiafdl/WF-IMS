@@ -1,0 +1,99 @@
+<aside class="sidebar">
+
+  {# ── Dashboard ──────────────────────────────────── #}
+  <a href="{{ url_for('dashboard.index') }}"
+     class="sidebar-item {% if request.blueprint == 'dashboard' %}active{% endif %}">
+    <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+      <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+    </svg>
+    Dashboard
+  </a>
+
+  <div class="sidebar-divider"></div>
+
+  {# ── Procurement ────────────────────────────────── #}
+  <div class="sidebar-section-label">Procurement</div>
+
+  <a href="{{ url_for('procurement.pr_list') }}"
+     class="sidebar-sub-item {% if request.endpoint == 'procurement.pr_list' %}active{% endif %}">
+    Purchase Requisitions
+  </a>
+  <a href="{{ url_for('procurement.po_list') }}"
+     class="sidebar-sub-item {% if request.endpoint == 'procurement.po_list' %}active{% endif %}">
+    Purchase Orders
+  </a>
+  <a href="{{ url_for('procurement.gr_list') }}"
+     class="sidebar-sub-item {% if request.endpoint == 'procurement.gr_list' %}active{% endif %}">
+    Goods Receipts
+  </a>
+  <a href="{{ url_for('procurement.invoice_list') }}"
+     class="sidebar-sub-item {% if request.endpoint == 'procurement.invoice_list' %}active{% endif %}">
+    Supplier Invoices
+  </a>
+  <a href="{{ url_for('procurement.payment_list') }}"
+     class="sidebar-sub-item {% if request.endpoint == 'procurement.payment_list' %}active{% endif %}">
+    Payments
+  </a>
+
+  <div class="sidebar-divider"></div>
+
+  {# ── Production ─────────────────────────────────── #}
+  <div class="sidebar-section-label">Production</div>
+
+  <a href="{{ url_for('production.wo_list') }}"
+     class="sidebar-sub-item {% if request.blueprint == 'production' %}active{% endif %}">
+    Work Orders
+  </a>
+
+  <div class="sidebar-divider"></div>
+
+  {# ── Sales ──────────────────────────────────────── #}
+  <div class="sidebar-section-label">Sales</div>
+
+  <a href="{{ url_for('sales.so_list') }}"
+     class="sidebar-sub-item {% if request.endpoint == 'sales.so_list' %}active{% endif %}">
+    Sales Orders
+  </a>
+  <a href="{{ url_for('sales.delivery_list') }}"
+     class="sidebar-sub-item {% if request.endpoint == 'sales.delivery_list' %}active{% endif %}">
+    Deliveries
+  </a>
+  <a href="{{ url_for('sales.invoice_list') }}"
+     class="sidebar-sub-item {% if request.endpoint == 'sales.invoice_list' %}active{% endif %}">
+    Invoices
+  </a>
+  <a href="{{ url_for('sales.payment_list') }}"
+     class="sidebar-sub-item {% if request.endpoint == 'sales.payment_list' %}active{% endif %}">
+    Payments Received
+  </a>
+
+  <div class="sidebar-divider"></div>
+
+  {# ── Inventory ──────────────────────────────────── #}
+  <div class="sidebar-section-label">Inventory</div>
+
+  <a href="{{ url_for('inventory.stock') }}"
+     class="sidebar-sub-item {% if request.blueprint == 'inventory' %}active{% endif %}">
+    Stock Ledger
+  </a>
+
+  <div class="sidebar-divider"></div>
+
+  {# ── Master Data ────────────────────────────────── #}
+  <div class="sidebar-section-label">Master Data</div>
+
+  <a href="{{ url_for('master.vendor_list') }}"
+     class="sidebar-sub-item {% if request.endpoint == 'master.vendor_list' %}active{% endif %}">
+    Vendors
+  </a>
+  <a href="{{ url_for('master.customer_list') }}"
+     class="sidebar-sub-item {% if request.endpoint == 'master.customer_list' %}active{% endif %}">
+    Customers
+  </a>
+  <a href="{{ url_for('master.material_list') }}"
+     class="sidebar-sub-item {% if request.endpoint == 'master.material_list' %}active{% endif %}">
+    Materials
+  </a>
+
+</aside>

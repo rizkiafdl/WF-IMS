@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard — WF-IMS{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1 class="page-title">Dashboard</h1>
+</div>
+
+<div class="grid-4">
+  <div class="stat-card">
+    <p class="stat-label">Low Stock Alerts</p>
+    <p class="stat-value">{{ low_stock_count }}</p>
+    <p class="stat-sub">Material di bawah ROP</p>
+  </div>
+  <div class="stat-card">
+    <p class="stat-label">Open Purchase Orders</p>
+    <p class="stat-value">{{ open_po }}</p>
+    <p class="stat-sub">Draft / Sent / Confirmed</p>
+  </div>
+  <div class="stat-card">
+    <p class="stat-label">Active Work Orders</p>
+    <p class="stat-value">{{ active_wo }}</p>
+    <p class="stat-sub">Approved / In Progress</p>
+  </div>
+  <div class="stat-card">
+    <p class="stat-label">Open Sales Orders</p>
+    <p class="stat-value">{{ open_so }}</p>
+    <p class="stat-sub">Submitted / Approved / Picking</p>
+  </div>
+</div>
+{% endblock %}

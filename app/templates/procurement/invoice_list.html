@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% block title %}Supplier Invoices — WF-IMS{% endblock %}
+
+{% block content %}
+{% set mbadge = {'pending':'badge-warning','matched':'badge-success','exception':'badge-danger'} %}
+
+<div class="page-header">
+  <h1 class="page-title">Supplier Invoices</h1>
+</div>
+
+<div class="table-wrapper">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>No. Invoice</th>
+        <th>No. PO</th>
+        <th>Vendor</th>
+        <th>Jumlah</th>
+        <th>Tgl Invoice</th>
+        <th>Status Match</th>
+        <th>Aksi</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for inv in invoices %}
+      <tr>
+        <td class="fw-medium">{{ inv.invoice_number }}</td>
+        <td>
+          <a href="{{ url_for('procurement.po_detail', po_id=inv.po_id) }}">{{ inv.purchase_order.po_number }}</a>
+        </td>
+        <td>{{ inv.vendor.name }}</td>
+        <td>{{ "Rp {:,.0f}".format(inv.invoice_amount | float) }}</td>
+        <td class="text-sm text-muted">{{ inv.invoice_date }}</td>
+        <td>
+          <span class="badge {{ mbadge.get(inv.match_status.value, 'badge-neutral') }}">
+            {{ inv.match_status.value | title }}
+          </span>
+        </td>
+        <td>
+          {% if inv.match_status.value == 'pending' %}
+            <form method="POST" action="{{ url_for('procurement.invoice_match', invoice_id=inv.id) }}">
+              <button type="submit" class="btn btn-outlined btn-sm">Run 3-Way Match</button>
+            </form>
+          {% elif inv.match_status.value == 'matched' and inv.payment_vouchers.count() == 0 %}
+            <form method="POST" action="{{ url_for('procurement.invoice_pay', invoice_id=inv.id) }}" class="flex-center gap-2">
+              <input type="date" name="payment_date" class="form-input w-auto" required>
+              <input type="hidden" name="payment_method" value="Bank Transfer">
+              <button type="submit" class="btn btn-primary btn-sm">Bayar</button>
+            </form>
+          {% elif inv.payment_vouchers.count() > 0 %}
+            <span class="badge badge-success">Lunas</span>
+          {% elif inv.match_status.value == 'exception' %}
+            <span class="badge badge-danger">Exception</span>
+          {% endif %}
+        </td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="7" class="text-center text-muted">Belum ada Supplier Invoice.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

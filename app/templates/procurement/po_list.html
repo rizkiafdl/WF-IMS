@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block title %}Purchase Orders — WF-IMS{% endblock %}
+
+{% block content %}
+{% set sbadge = {'draft':'badge-warning','sent':'badge-info','confirmed':'badge-info','received':'badge-success','closed':'badge-neutral','cancelled':'badge-danger'} %}
+
+<div class="page-header">
+  <h1 class="page-title">Purchase Orders</h1>
+</div>
+
+<div class="table-wrapper">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>No. PO</th>
+        <th>Vendor</th>
+        <th>Material</th>
+        <th>Qty</th>
+        <th>Total</th>
+        <th>Status</th>
+        <th>Tanggal</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for po in pos %}
+      <tr>
+        <td class="fw-medium">{{ po.po_number }}</td>
+        <td>{{ po.vendor.name }}</td>
+        <td>{{ po.material.name }}</td>
+        <td>{{ po.qty_ordered }} {{ po.material.unit }}</td>
+        <td>{{ "Rp {:,.0f}".format(po.total_amount | float) }}</td>
+        <td>
+          <span class="badge {{ sbadge.get(po.status.value, 'badge-neutral') }}">
+            {{ po.status.value | replace('_',' ') | title }}
+          </span>
+        </td>
+        <td class="text-sm text-muted">{{ po.created_at.strftime('%d %b %Y') }}</td>
+        <td>
+          <a href="{{ url_for('procurement.po_detail', po_id=po.id) }}" class="btn btn-secondary btn-sm">Detail</a>
+        </td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="8" class="text-center text-muted">Belum ada Purchase Order.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

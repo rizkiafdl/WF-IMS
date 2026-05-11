@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% block title %}Input Supplier Invoice — WF-IMS{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1 class="page-title">Input Supplier Invoice</h1>
+  <a href="{{ url_for('procurement.po_detail', po_id=po.id) }}" class="btn btn-secondary">Kembali</a>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <p class="card-title">Info PO</p>
+  </div>
+  <div class="grid-2 mb-0">
+    <div>
+      <p class="text-sm text-muted mb-0">No. PO</p>
+      <p class="fw-medium">{{ po.po_number }}</p>
+    </div>
+    <div>
+      <p class="text-sm text-muted mb-0">Vendor</p>
+      <p class="fw-medium">{{ po.vendor.name }}</p>
+    </div>
+    <div>
+      <p class="text-sm text-muted mb-0">Total PO</p>
+      <p class="fw-medium">{{ "Rp {:,.0f}".format(po.total_amount | float) }}</p>
+    </div>
+    <div>
+      <p class="text-sm text-muted mb-0">Qty Dipesan</p>
+      <p class="fw-medium">{{ po.qty_ordered }} {{ po.material.unit }}</p>
+    </div>
+  </div>
+</div>
+
+<div class="card mt-6">
+  <form method="POST">
+    <div class="grid-2">
+      <div class="form-group">
+        <label class="form-label" for="invoice_number">No. Invoice Supplier *</label>
+        <input class="form-input" type="text" id="invoice_number" name="invoice_number" required>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="invoice_amount">Jumlah Invoice (Rp) *</label>
+        <input class="form-input" type="number" id="invoice_amount" name="invoice_amount"
+               step="0.01" min="0" value="{{ po.total_amount }}" required>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="invoice_date">Tanggal Invoice *</label>
+        <input class="form-input" type="date" id="invoice_date" name="invoice_date" required>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="received_date">Tanggal Diterima *</label>
+        <input class="form-input" type="date" id="received_date" name="received_date" required>
+      </div>
+    </div>
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary">Simpan Invoice</button>
+      <a href="{{ url_for('procurement.po_detail', po_id=po.id) }}" class="btn btn-secondary">Batal</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block title %}Materials — WF-IMS{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1 class="page-title">Materials</h1>
+  <a href="{{ url_for('master.material_new') }}" class="btn btn-primary">+ Tambah Material</a>
+</div>
+
+<div class="table-wrapper">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Nama</th>
+        <th>Tipe</th>
+        <th>Unit</th>
+        <th>Reorder Point</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for m in materials %}
+      <tr>
+        <td class="fw-medium">{{ m.name }}</td>
+        <td>
+          {% if m.material_type.value == 'raw_material' %}
+            <span class="badge badge-info">Raw Material</span>
+          {% else %}
+            <span class="badge badge-success">Finished Goods</span>
+          {% endif %}
+        </td>
+        <td>{{ m.unit }}</td>
+        <td>{{ m.reorder_point }}</td>
+        <td>
+          <a href="{{ url_for('master.material_edit', material_id=m.id) }}" class="btn btn-secondary btn-sm">Edit</a>
+        </td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="5" class="text-center text-muted">Belum ada material.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

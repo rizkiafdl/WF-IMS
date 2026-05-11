@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block title %}Buat Purchase Requisition — WF-IMS{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1 class="page-title">Buat Purchase Requisition</h1>
+  <a href="{{ url_for('procurement.pr_list') }}" class="btn btn-secondary">Kembali</a>
+</div>
+
+<div class="card">
+  <form method="POST">
+    <div class="grid-2">
+      <div class="form-group">
+        <label class="form-label" for="material_id">Material *</label>
+        <select class="form-select" id="material_id" name="material_id" required>
+          <option value="">— Pilih material —</option>
+          {% for m in materials %}
+          <option value="{{ m.id }}">{{ m.name }} ({{ m.unit }})</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="qty">Quantity *</label>
+        <input class="form-input" type="number" id="qty" name="qty"
+               step="0.001" min="0.001" required>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="unit">Satuan *</label>
+        <input class="form-input" type="text" id="unit" name="unit"
+               placeholder="kg / ton / bag" required>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label" for="reason">Alasan / Keterangan</label>
+      <textarea class="form-textarea" id="reason" name="reason" rows="3"></textarea>
+    </div>
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary">Simpan sebagai Draft</button>
+      <a href="{{ url_for('procurement.pr_list') }}" class="btn btn-secondary">Batal</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

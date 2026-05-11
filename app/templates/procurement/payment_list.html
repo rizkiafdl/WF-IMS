@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block title %}Payments — WF-IMS{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1 class="page-title">Payments</h1>
+</div>
+
+<div class="table-wrapper">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>No. Voucher</th>
+        <th>No. Invoice</th>
+        <th>Vendor</th>
+        <th>Jumlah</th>
+        <th>Metode</th>
+        <th>Tgl Bayar</th>
+        <th>Jurnal</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for pv in payments %}
+      <tr>
+        <td class="fw-medium">{{ pv.voucher_number }}</td>
+        <td>{{ pv.supplier_invoice.invoice_number }}</td>
+        <td>{{ pv.supplier_invoice.vendor.name }}</td>
+        <td>{{ "Rp {:,.0f}".format(pv.amount | float) }}</td>
+        <td>{{ pv.payment_method }}</td>
+        <td class="text-sm text-muted">{{ pv.payment_date }}</td>
+        <td class="text-sm text-muted">
+          {% if pv.journal_entry %}
+            DR {{ pv.journal_entry.get('debit') }} / CR {{ pv.journal_entry.get('credit') }}
+          {% endif %}
+        </td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="7" class="text-center text-muted">Belum ada payment.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

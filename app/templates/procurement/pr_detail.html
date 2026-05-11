@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% block title %}{{ pr.pr_number }} — WF-IMS{% endblock %}
+
+{% block content %}
+{% set sbadge = {'draft':'badge-warning','submitted':'badge-info','approved':'badge-success','rejected':'badge-danger'} %}
+
+<div class="page-header">
+  <h1 class="page-title">{{ pr.pr_number }}</h1>
+  <a href="{{ url_for('procurement.pr_list') }}" class="btn btn-secondary">Kembali</a>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <p class="card-title">Detail PR</p>
+    <span class="badge {{ sbadge.get(pr.status.value, 'badge-neutral') }}">
+      {{ pr.status.value | replace('_',' ') | title }}
+    </span>
+  </div>
+
+  <div class="grid-2">
+    <div>
+      <p class="text-sm text-muted mb-0">No. PR</p>
+      <p class="fw-medium">{{ pr.pr_number }}</p>
+    </div>
+    <div>
+      <p class="text-sm text-muted mb-0">Material</p>
+      <p class="fw-medium">{{ pr.material.name }}</p>
+    </div>
+    <div>
+      <p class="text-sm text-muted mb-0">Quantity</p>
+      <p class="fw-medium">{{ pr.qty }} {{ pr.unit }}</p>
+    </div>
+    <div>
+      <p class="text-sm text-muted mb-0">Dibuat oleh</p>
+      <p class="fw-medium">{{ pr.requester.full_name }}</p>
+    </div>
+    <div>
+      <p class="text-sm text-muted mb-0">Tanggal dibuat</p>
+      <p class="fw-medium">{{ pr.created_at.strftime('%d %b %Y %H:%M') }}</p>
+    </div>
+    {% if pr.approver %}
+    <div>
+      <p class="text-sm text-muted mb-0">Disetujui / Ditolak oleh</p>
+      <p class="fw-medium">{{ pr.approver.full_name }} — {{ pr.approved_at.strftime('%d %b %Y %H:%M') }}</p>
+    </div>
+    {% endif %}
+  </div>
+
+  {% if pr.reason %}
+  <div class="mt-4">
+    <p class="text-sm text-muted mb-0">Alasan</p>
+    <p>{{ pr.reason }}</p>
+  </div>
+  {% endif %}
+
+  <div class="form-actions">
+    {% if pr.status.value == 'draft' %}
+      <form method="POST" action="{{ url_for('procurement.pr_submit', pr_id=pr.id) }}">
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </form>
+    {% elif pr.status.value == 'submitted' %}
+      <form method="POST" action="{{ url_for('procurement.pr_approve', pr_id=pr.id) }}">
+        <button type="submit" class="btn btn-primary">Setujui</button>
+      </form>
+      <form method="POST" action="{{ url_for('procurement.pr_reject', pr_id=pr.id) }}">
+        <button type="submit" class="btn btn-danger">Tolak</button>
+      </form>
+    {% elif pr.status.value == 'approved' %}
+      <a href="{{ url_for('procurement.po_new', pr_id=pr.id) }}" class="btn btn-primary">Buat PO</a>
+    {% endif %}
+  </div>
+</div>
+
+{% if pr.purchase_orders.count() > 0 %}
+<div class="card mt-6">
+  <div class="card-header">
+    <p class="card-title">Purchase Orders</p>
+  </div>
+  <table class="table">
+    <thead>
+      <tr><th>No. PO</th><th>Vendor</th><th>Total</th><th>Status</th><th></th></tr>
+    </thead>
+    <tbody>
+      {% for po in pr.purchase_orders %}
+      <tr>
+        <td class="fw-medium">{{ po.po_number }}</td>
+        <td>{{ po.vendor.name }}</td>
+        <td>{{ "Rp {:,.0f}".format(po.total_amount | float) }}</td>
+        <td><span class="badge badge-info">{{ po.status.value | title }}</span></td>
+        <td><a href="{{ url_for('procurement.po_detail', po_id=po.id) }}" class="btn btn-secondary btn-sm">Detail</a></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+{% block title %}{% if material %}Edit Material{% else %}Tambah Material{% endif %} — WF-IMS{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1 class="page-title">{% if material %}Edit Material: {{ material.name }}{% else %}Tambah Material{% endif %}</h1>
+  <a href="{{ url_for('master.material_list') }}" class="btn btn-secondary">Kembali</a>
+</div>
+
+<div class="card">
+  <form method="POST">
+    <div class="grid-2">
+      <div class="form-group">
+        <label class="form-label" for="name">Nama Material *</label>
+        <input class="form-input" type="text" id="name" name="name"
+               value="{{ material.name if material else '' }}" required>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="unit">Satuan *</label>
+        <input class="form-input" type="text" id="unit" name="unit"
+               placeholder="kg / ton / bag"
+               value="{{ material.unit if material else '' }}" required>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="reorder_point">Reorder Point</label>
+        <input class="form-input" type="number" id="reorder_point" name="reorder_point"
+               step="0.001" min="0"
+               value="{{ material.reorder_point if material else '0' }}">
+      </div>
+      {% if not material %}
+      <div class="form-group">
+        <label class="form-label" for="material_type">Tipe *</label>
+        <select class="form-select" id="material_type" name="material_type" required>
+          <option value="">— Pilih tipe —</option>
+          {% for mt in material_types %}
+          <option value="{{ mt.name }}">{{ mt.name | replace('_', ' ') | title }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      {% endif %}
+    </div>
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary">Simpan</button>
+      <a href="{{ url_for('master.material_list') }}" class="btn btn-secondary">Batal</a>
+    </div>
+  </form>
+</div>
+
+{% if material and material.material_type.value == 'finished_goods' %}
+<div class="card mt-6">
+  <div class="card-header">
+    <p class="card-title">Bill of Materials (BOM)</p>
+  </div>
+
+  <div class="table-wrapper mb-0">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Bahan Baku</th>
+          <th>Qty / Unit FG</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in bom_items %}
+        <tr>
+          <td>{{ item.rm_material.name }}</td>
+          <td>{{ item.qty_per_unit }} {{ item.rm_material.unit }}</td>
+          <td>
+            <form method="POST" action="{{ url_for('master.bom_delete', material_id=material.id, bom_id=item.id) }}">
+              <button type="submit" class="btn btn-danger btn-sm"
+                      onclick="return confirm('Hapus BOM item ini?')">Hapus</button>
+            </form>
+          </td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="3" class="text-center text-muted">Belum ada BOM item.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <form method="POST" action="{{ url_for('master.bom_add', material_id=material.id) }}" class="mt-4">
+    <p class="fw-medium text-sm mb-0">Tambah BOM Item</p>
+    <div class="grid-2 mt-4">
+      <div class="form-group">
+        <label class="form-label" for="rm_material_id">Bahan Baku</label>
+        <select class="form-select" id="rm_material_id" name="rm_material_id" required>
+          <option value="">— Pilih bahan baku —</option>
+          {% for rm in raw_materials %}
+          <option value="{{ rm.id }}">{{ rm.name }} ({{ rm.unit }})</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="qty_per_unit">Qty per Unit FG</label>
+        <input class="form-input" type="number" id="qty_per_unit" name="qty_per_unit"
+               step="0.001" min="0.001" required>
+      </div>
+    </div>
+    <button type="submit" class="btn btn-outlined">+ Tambah</button>
+  </form>
+</div>
+{% endif %}
+{% endblock %}

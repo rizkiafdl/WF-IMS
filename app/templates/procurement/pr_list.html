@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% block title %}Purchase Requisitions — WF-IMS{% endblock %}
+
+{% block content %}
+{% set sbadge = {'draft':'badge-warning','submitted':'badge-info','approved':'badge-success','rejected':'badge-danger'} %}
+
+<div class="page-header">
+  <h1 class="page-title">Purchase Requisitions</h1>
+  <a href="{{ url_for('procurement.pr_new') }}" class="btn btn-primary">+ Buat PR</a>
+</div>
+
+<div class="table-wrapper">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>No. PR</th>
+        <th>Material</th>
+        <th>Qty</th>
+        <th>Status</th>
+        <th>Dibuat oleh</th>
+        <th>Tanggal</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for pr in prs %}
+      <tr>
+        <td class="fw-medium">{{ pr.pr_number }}</td>
+        <td>{{ pr.material.name }}</td>
+        <td>{{ pr.qty }} {{ pr.unit }}</td>
+        <td>
+          <span class="badge {{ sbadge.get(pr.status.value, 'badge-neutral') }}">
+            {{ pr.status.value | replace('_',' ') | title }}
+          </span>
+        </td>
+        <td>{{ pr.requester.full_name }}</td>
+        <td class="text-sm text-muted">{{ pr.created_at.strftime('%d %b %Y') }}</td>
+        <td>
+          <a href="{{ url_for('procurement.pr_detail', pr_id=pr.id) }}" class="btn btn-secondary btn-sm">Detail</a>
+        </td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="7" class="text-center text-muted">Belum ada Purchase Requisition.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

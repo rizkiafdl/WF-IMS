@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login — WF-IMS</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+  <style>
+    body            { background: var(--color-bg-page); min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+    .login-wrap     { width: 100%; max-width: 420px; padding: var(--space-6); }
+    .login-brand    { text-align: center; margin-bottom: var(--space-8); }
+    .login-brand-name { font-size: var(--text-h1-size); font-weight: 700; color: var(--color-primary-600); margin: 0 0 var(--space-1); letter-spacing: -0.5px; }
+    .login-brand-sub  { color: var(--color-text-muted); font-size: var(--text-p2-size); margin: 0; }
+    .login-heading  { font-size: var(--text-h2-size); font-weight: 600; color: var(--color-text-primary); margin: 0 0 var(--space-6); }
+    .btn-block      { width: 100%; justify-content: center; }
+  </style>
+</head>
+<body>
+  <div class="login-wrap">
+    <div class="login-brand">
+      <p class="login-brand-name">WF-IMS</p>
+      <p class="login-brand-sub">Wood Fuel Integrated Management System</p>
+    </div>
+
+    <div class="card">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}
+          {% set alert_class = {'success':'alert-success','warning':'alert-warning','error':'alert-danger','danger':'alert-danger','info':'alert-info'}.get(category, 'alert-info') %}
+          <div class="alert {{ alert_class }}" data-autohide>{{ message }}</div>
+        {% endfor %}
+      {% endwith %}
+
+      <p class="login-heading">Masuk</p>
+
+      <form method="POST">
+        <div class="form-group">
+          <label class="form-label" for="email">Email</label>
+          <input class="form-input" type="email" id="email" name="email"
+                 value="{{ request.form.get('email', '') }}" required autofocus>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="password">Password</label>
+          <input class="form-input" type="password" id="password" name="password" required>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Masuk</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

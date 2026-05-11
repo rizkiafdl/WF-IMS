@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block title %}Goods Receipts — WF-IMS{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1 class="page-title">Goods Receipts</h1>
+</div>
+
+<div class="table-wrapper">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>No. GR</th>
+        <th>No. PO</th>
+        <th>Material</th>
+        <th>Net Weight</th>
+        <th>Variance</th>
+        <th>Toleransi</th>
+        <th>Diterima</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for gr in grs %}
+      <tr>
+        <td class="fw-medium">{{ gr.gr_number }}</td>
+        <td>
+          <a href="{{ url_for('procurement.po_detail', po_id=gr.po_id) }}">
+            {{ gr.purchase_order.po_number }}
+          </a>
+        </td>
+        <td>{{ gr.purchase_order.material.name }}</td>
+        <td>{{ gr.net_weight }} kg</td>
+        <td>{{ "{:+.2f}%".format(gr.weight_variance_pct | float) }}</td>
+        <td>
+          {% if gr.is_within_tolerance %}
+            <span class="badge badge-success">OK</span>
+          {% else %}
+            <span class="badge badge-danger">Melebihi</span>
+          {% endif %}
+        </td>
+        <td class="text-sm text-muted">{{ gr.received_at.strftime('%d %b %Y %H:%M') }}</td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="7" class="text-center text-muted">Belum ada Goods Receipt.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

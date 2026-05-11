@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% block title %}Vendors — WF-IMS{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1 class="page-title">Vendors</h1>
+  <a href="{{ url_for('master.vendor_new') }}" class="btn btn-primary">+ Tambah Vendor</a>
+</div>
+
+<div class="table-wrapper">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Nama</th>
+        <th>Kontak</th>
+        <th>Telepon</th>
+        <th>Email</th>
+        <th>Terms (hari)</th>
+        <th>Status</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for v in vendors %}
+      <tr>
+        <td class="fw-medium">{{ v.name }}</td>
+        <td>{{ v.contact_name or '—' }}</td>
+        <td>{{ v.phone or '—' }}</td>
+        <td>{{ v.email or '—' }}</td>
+        <td>{{ v.payment_terms or '—' }}</td>
+        <td>
+          {% if v.is_active %}
+            <span class="badge badge-success">Aktif</span>
+          {% else %}
+            <span class="badge badge-neutral">Nonaktif</span>
+          {% endif %}
+        </td>
+        <td>
+          <a href="{{ url_for('master.vendor_edit', vendor_id=v.id) }}" class="btn btn-secondary btn-sm">Edit</a>
+        </td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="7" class="text-center text-muted">Belum ada vendor.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

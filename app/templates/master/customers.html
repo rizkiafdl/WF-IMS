@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% block title %}Customers — WF-IMS{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1 class="page-title">Customers</h1>
+  <a href="{{ url_for('master.customer_new') }}" class="btn btn-primary">+ Tambah Customer</a>
+</div>
+
+<div class="table-wrapper">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Nama</th>
+        <th>Kontak</th>
+        <th>Telepon</th>
+        <th>Email</th>
+        <th>Terms (hari)</th>
+        <th>Status</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for c in customers %}
+      <tr>
+        <td class="fw-medium">{{ c.name }}</td>
+        <td>{{ c.contact_name or '—' }}</td>
+        <td>{{ c.phone or '—' }}</td>
+        <td>{{ c.email or '—' }}</td>
+        <td>{{ c.payment_terms or '—' }}</td>
+        <td>
+          {% if c.is_active %}
+            <span class="badge badge-success">Aktif</span>
+          {% else %}
+            <span class="badge badge-neutral">Nonaktif</span>
+          {% endif %}
+        </td>
+        <td>
+          <a href="{{ url_for('master.customer_edit', customer_id=c.id) }}" class="btn btn-secondary btn-sm">Edit</a>
+        </td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="7" class="text-center text-muted">Belum ada customer.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}
